@@ -1,0 +1,10 @@
+Package: psp
+Type: Package
+Title: Some tools to work with paired screen-positive studies.
+Version: 1.0
+Date: 2015-02-07
+Author: Mark Clements
+Maintainer: Mark Clements <mark.clements@ki.se>
+Description: Some tools to work with paired screen-positive studies.
+License: GPL-3
+Suggests: foreign

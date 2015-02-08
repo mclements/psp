@@ -8,3 +8,4 @@ Maintainer: Mark Clements <mark.clements@ki.se>
 Description: Some tools to work with paired screen-positive studies.
 License: GPL-3
 Suggests: foreign
+Depends: geepack, stats

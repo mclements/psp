@@ -11,9 +11,9 @@
   relative false positive fraction from a paired screen-positive design.
 }
 \usage{
-rPR(formula, data, test1, test0, TP)
-rTPR(formula, data, test1, test0)
-rFPR(formula, data, test1, test0)
+rPR(formula, data, test1, test0, restrict = FALSE, TP)
+rTPR(formula, data, test1, test0, restrict = FALSE)
+rFPR(formula, data, test1, test0, restrict = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,9 @@ rFPR(formula, data, test1, test0)
 }
   \item{test0}{
     expression for the reference test
+}
+  \item{restrict}{
+    restrict the analysis to those with a non-missing outcome
 }
   \item{TP}{
     logical to show whether use rTPF (TP=TRUE) or rFPF (TP=FALSE)
@@ -64,20 +67,48 @@ rFPR(formula, data, test1, test0)
 require(foreign)
 ex <- read.dta("http://research.fhcrc.org/content/dam/stripe/diagnostic-biomarkers-statistical-center/files/psa_dre_v2.dta")
 
+## main model for true positives
 summary(rTPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
              data = ex,
              test1=I(psa=="pos"),
              test0=I(dre=="pos")))
+
+## restricted model (those with known disease status)
+## NB: the covariate main effect and intercept are WRONG/biased
+summary(rTPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
+             data = ex,
+             test1=I(psa=="pos"),
+             test0=I(dre=="pos"),
+             restrict=TRUE))
+
 ## reduced model
 summary(rTPR(I(d=="yes") ~ test + test:I(race=="black"),
              data = ex,
              test1=I(psa=="pos"),
              test0=I(dre=="pos")))
 
+## reduced and restricted model
+## NB: ALL of the point estimates are WRONG/biased
+summary(rTPR(I(d=="yes") ~ test + test:I(race=="black"),
+             data = ex,
+             test1=I(psa=="pos"),
+             test0=I(dre=="pos"),
+             restrict=TRUE))
+
+## main model for false positives
 summary(rFPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
              data = ex,
              test1=I(psa=="pos"),
              test0=I(dre=="pos")))
+
+## restricted model
+## NB: the covariate main effect and intercept are WRONG/biased
+summary(rFPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
+             data = ex,
+             test1=I(psa=="pos"),
+             test0=I(dre=="pos"),
+             restrict=TRUE))
+
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

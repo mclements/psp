@@ -19,8 +19,12 @@ rhs <- function (formula)
     newformula[[length(formula)]] <- value
     newformula
 }
-rPR <- function(formula, data, test1, test0, TP) {
+rPR <- function(formula, data, test1, test0, restrict = FALSE, TP) {
     disease <- eval(lhs(formula), data)
+    if (restrict) {
+        data <- data[!is.na(disease),]
+        disease <- disease[!is.na(disease)]
+    }
     test1 <- eval(substitute(test1), data)
     test0 <- eval(substitute(test0), data)
     data <- transform(data, .id = 1:nrow(data))
@@ -42,21 +46,21 @@ rPR <- function(formula, data, test1, test0, TP) {
 rTPR <- function(...) rPR(..., TP = TRUE)
 rFPR <- function(...) rPR(..., TP = FALSE)
     
-require(foreign)
-ex <- read.dta("~/work/psa_dre_v2.dta")
+## require(foreign)
+## ex <- read.dta("~/work/psa_dre_v2.dta")
 
-summary(rTPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
-             data = ex,
-             test1=I(psa=="pos"),
-             test0=I(dre=="pos")))
-## reduced model
-summary(rTPR(I(d=="yes") ~ test + test:I(race=="black"),
-             data = ex,
-             test1=I(psa=="pos"),
-             test0=I(dre=="pos")))
+## summary(rTPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
+##              data = ex,
+##              test1=I(psa=="pos"),
+##              test0=I(dre=="pos")))
+## ## reduced model
+## summary(rTPR(I(d=="yes") ~ test + test:I(race=="black"),
+##              data = ex,
+##              test1=I(psa=="pos"),
+##              test0=I(dre=="pos")))
 
-summary(rFPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
-             data = ex,
-             test1=I(psa=="pos"),
-             test0=I(dre=="pos")))
+## summary(rFPR(I(d=="yes") ~ test + I(race=="black") + test:I(race=="black"),
+##              data = ex,
+##              test1=I(psa=="pos"),
+##              test0=I(dre=="pos")))
 

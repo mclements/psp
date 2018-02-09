@@ -1,2 +1,2 @@
-##exportPattern("^[[:alpha:]]+")
-export(rFPR,rTPR,psp.univariate)
+exportPattern("^[[:alpha:]]+")
+## export(rFPR,rTPR,psp.univariate,psp.univariate1)
